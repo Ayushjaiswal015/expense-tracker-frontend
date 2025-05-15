@@ -5,12 +5,15 @@ import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import './App.css';
 
+// Env variable se base API URL le
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/expenses';
+
 const App = () => {
   const [expenses, setExpenses] = useState([]);
   const [editingExpense, setEditingExpense] = useState(null);
 
   const fetchExpenses = async () => {
-    const res = await axios.get('http://localhost:5000/api/expenses');
+    const res = await axios.get(API_URL);
     setExpenses(res.data);
   };
 
@@ -19,7 +22,7 @@ const App = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/expenses/${id}`);
+    await axios.delete(`${API_URL}/${id}`);
     fetchExpenses();
   };
 
@@ -30,11 +33,11 @@ const App = () => {
   const handleFormSubmit = async (formData) => {
     if (editingExpense) {
       // Update existing
-      await axios.put(`http://localhost:5000/api/expenses/${editingExpense._id}`, formData);
+      await axios.put(`${API_URL}/${editingExpense._id}`, formData);
       setEditingExpense(null);
     } else {
       // Create new
-      await axios.post('http://localhost:5000/api/expenses', formData);
+      await axios.post(API_URL, formData);
     }
     fetchExpenses();
   };
